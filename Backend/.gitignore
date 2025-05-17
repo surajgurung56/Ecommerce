@@ -1,0 +1,77 @@
+## Ignore build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+*.log
+
+## User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/
+.idea/
+
+## OS-generated files
+.DS_Store
+Thumbs.db
+
+## Rider files
+.idea/
+
+## ASP.NET Core secrets
+secrets.json
+
+## Entity Framework Core Migrations Snapshots
+Migrations/*.Designer.cs
+Migrations/*Snapshot.cs
+
+## Publish output
+wwwroot/
+
+## DotNet CLI
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Resharper
+*.DotSettings.user
+
+## NCrunch
+.ncrunch*
+*.ncrunchproject
+
+## Visual Studio Code settings
+.vscode/
+.vs/
+
+## Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+## NPM packages (if using frontend)
+node_modules/
+
+## Environment variables
+.env
+.env.*
+
+## Auto-generated files (like by scaffolding)
+Generated_Code/
+
+## Azure Pipelines
+.azure-pipelines/
+
+# Optional: exclude local SQLite DBs
+*.db
+*.sqlite
+
+# Optional: JetBrains Rider
+.idea/
+
+# Optional: Local configs
+appsettings.Development.json
+
+appsettings.json
