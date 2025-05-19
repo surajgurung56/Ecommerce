@@ -74,4 +74,4 @@ Generated_Code/
 # Optional: Local configs
 appsettings.Development.json
 
-# appsettings.json
+appsettings.json
