@@ -3,8 +3,10 @@ using Backend.Data;
 using Backend.Dtos.Auth;
 using Backend.Interfaces;
 using Backend.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Backend.Controllers
 {
@@ -13,9 +15,11 @@ namespace Backend.Controllers
     public class UserController : ControllerBase
     {
         public readonly ApplicationDbContext dbContext;
-        public UserController(ApplicationDbContext dbContext)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public UserController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             this.dbContext = dbContext;
+            _userManager = userManager;
         }
 
         [HttpGet("/user")]
@@ -29,23 +33,28 @@ namespace Backend.Controllers
             }
 
             var user = await dbContext.applicationUsers
-                .Where(u => u.Id == userId)
-                .Select(u => new
-                {
-                    u.Name,
-                    u.Email,
-                    u.ContactNumber,
-                    u.MembershipId,
-                    u.Id
-                })
-                .FirstOrDefaultAsync();
+                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
                 return NotFound(new { success = false, message = "User not found." });
             }
 
-            return Ok(new { success = true, user });
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new
+            {
+                success = true,
+                user = new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.ContactNumber,
+                    user.MembershipId,
+                    Roles = roles
+                }
+            });
         }
 
 

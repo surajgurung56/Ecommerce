@@ -1,15 +1,10 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Tags, Gauge, Book, ShoppingBag, Info, LogOut } from "lucide-react";
+import { Tags, Book, ShoppingBag, Info, LogOut } from "lucide-react";
 
-const Sidebar = ({ sidebarToggle }) => {
-  const [organizerOpen, setOrganizerOpen] = useState(false);
-
+const Sidebar = () => {
   return (
     <div
-      className={`fixed top-0 left-0 z-40 h-screen bg-primary transition-transform duration-300 ease-in-out text-white p-4 w-64 ${
-        sidebarToggle ? "-translate-x-full" : "translate-x-0"
-      }`}
+      className={`fixed top-0 left-0 z-40 h-screen bg-primary transition-transform duration-300 ease-in-out text-white p-4 w-64 `}
     >
       <div className="flex flex-col h-full justify-between">
         <div>
@@ -20,18 +15,6 @@ const Sidebar = ({ sidebarToggle }) => {
 
           <div className="flex flex-col gap-6 overflow-y-auto">
             <div className="flex flex-col gap-1">
-              {/* <NavLink
-                to="/admin/dashboard"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors bg-white/10 text-white"
-                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
-                }
-              >
-                <Gauge size={20} />
-                <span>Dashboard</span>
-              </NavLink> */}
-
               <NavLink
                 to="/admin/gernres"
                 className={({ isActive }) =>
@@ -43,18 +26,6 @@ const Sidebar = ({ sidebarToggle }) => {
                 <Tags size={20} />
                 <span>Gernres</span>
               </NavLink>
-
-              {/* <NavLink
-                to="/admin/user"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors bg-white/10 text-white"
-                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
-                }
-              >
-                <Users size={20} />
-                <span>Users</span>
-              </NavLink> */}
 
               <NavLink
                 to="/admin/books"

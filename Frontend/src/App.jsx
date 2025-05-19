@@ -22,6 +22,7 @@ import Banner from "./pages/Admin/Banner";
 import { Toaster as ShadcnToaster } from "@/components/ui/toaster";
 import AdminOrderItems from "./pages/Admin/AdminOrderItems";
 import AdminBookDetail from "./pages/Admin/AdminBookDetail";
+import PrivateRoute from "./layout/PrivateRoute";
 
 function App() {
   const queryClient = new QueryClient();
@@ -35,11 +36,17 @@ function App() {
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
               <Route path="/books" element={<Books />} />
-              <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/cart" element={<Cart />} />
               <Route path="/books/:bookId" element={<BookDetails />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/orders/items/:orderId" element={<OrderDetails />} />
+
+              <Route element={<PrivateRoute />}>
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route
+                  path="/orders/items/:orderId"
+                  element={<OrderDetails />}
+                />
+              </Route>
             </Route>
 
             <Route element={<AdminLayout />}>

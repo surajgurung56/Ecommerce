@@ -345,26 +345,9 @@ namespace Backend.Controllers
                 return Unauthorized("User is not logged in.");
             }
 
-            //var orders = await dbContext.Orders
-            //    .Where(o => o.UserId == userId)
-            //    .ToListAsync();
-
             var orders = await dbContext.Orders
-    .Where(o => o.UserId == userId)
-    .Select(o => new
-    {
-        id = o.Id,
-        totalAmount = o.TotalAmount,
-        status = o.Status,
-        orderDate = o.OrderDate,
-        claimCode = o.ClaimCode,
-        userId = o.UserId,
-        User_name = o.User.Name,
-        membershipId = o.User.MembershipId,
-        orderItemCount = o.OrderItems.Count()
-    })
-    .ToListAsync();
-
+                .Where(o => o.UserId == userId)
+                .ToListAsync();
 
             return Ok(orders);
         }

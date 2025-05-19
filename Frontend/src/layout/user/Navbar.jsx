@@ -94,7 +94,8 @@ const Navbar = () => {
                             }`
                 }
               >
-                <HoverCard>
+                Browse Books
+                {/* <HoverCard>
                   <HoverCardTrigger> Browse Books</HoverCardTrigger>
                   <HoverCardContent>
                     <p>All Books</p>
@@ -103,7 +104,7 @@ const Navbar = () => {
                     <p>New Releases New</p>
                     <p>Deals</p>
                   </HoverCardContent>
-                </HoverCard>
+                </HoverCard> */}
               </NavLink>
             </nav>
           </div>

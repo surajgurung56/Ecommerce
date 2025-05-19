@@ -59,7 +59,7 @@ export default function BookDetails() {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Login is required.");
       console.error(error);
     }
   };
@@ -84,7 +84,7 @@ export default function BookDetails() {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Login is required.");
       console.error(error);
     }
   };

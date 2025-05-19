@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { baseUrl } from "@/config";
 import { useQueryClient } from "@tanstack/react-query";
 
-
 const BookCard = ({ book, isWished }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -28,12 +27,11 @@ const BookCard = ({ book, isWished }) => {
 
       if (data.success) {
         toast.success(data.message);
-        // queryClient.invalidateQueries({ queryKey: ["wishlists"] });
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Login is required.");
       console.error(error);
     }
   };
@@ -58,7 +56,7 @@ const BookCard = ({ book, isWished }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Login is required.");
       console.error(error);
     }
   };
@@ -84,7 +82,8 @@ const BookCard = ({ book, isWished }) => {
             {isWished ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
           </div>
 
-          {book.discountPercentage && book.isOnSale && 
+          {book.discountPercentage &&
+            book.isOnSale &&
             new Date(book.discountStartDate) <= new Date() &&
             new Date(book.discountEndDate) >= new Date() && (
               <div className={`absolute top-0 left-0 `}>
@@ -107,7 +106,7 @@ const BookCard = ({ book, isWished }) => {
               <span className="line-through text-gray-500 mr-2">
                 Rs. {book.price}
               </span>
-              <span >
+              <span>
                 Rs.{" "}
                 {Math.round(book.price * (1 - book.discountPercentage / 100))}
               </span>

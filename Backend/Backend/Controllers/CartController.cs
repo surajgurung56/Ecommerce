@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
+
+    [Authorize]
     [Route("/api")]
     [ApiController]
     public class CartController : ControllerBase
