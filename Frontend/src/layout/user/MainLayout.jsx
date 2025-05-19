@@ -20,7 +20,7 @@ const MainLayout = () => {
 
     ws.current.onopen = () => {
       hotToast.success("WebSocket connected");
-      console.info("WebSocket connected");
+      // console.info("WebSocket connected");
     };
 
     ws.current.onmessage = (event) => {

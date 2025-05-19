@@ -34,12 +34,14 @@ const EditGernereDilog = ({
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       const data = await response.json();
 
       if (data.success) {
+        toast.success(data.message);
         queryClient.invalidateQueries({ queryKey: ["genres"] });
         setIsAddGenreDialogOpen(false);
       } else {

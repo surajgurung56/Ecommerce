@@ -1,5 +1,6 @@
 ﻿using Backend.Data;
 using Backend.Dtos;
+using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace Backend.Controllers
             this.dbContext = dbContext;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost("/banner")]
         public async Task<ActionResult> CreateBanner([FromForm] BannerDto bannerDto)
         {
@@ -65,7 +66,6 @@ namespace Backend.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("/banners")]
         public async Task<ActionResult> GetAllBanners()
         {
@@ -76,6 +76,30 @@ namespace Backend.Controllers
                 data = banners
             });
         }
+
+
+
+        [Authorize(Roles = "admin")]
+        [HttpDelete("/banner/{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var banner = await dbContext.Banners.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (banner == null)
+            {
+                return NotFound("Banner announcement not found.");
+            }
+
+            dbContext.Banners.Remove(banner);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Banner announcement removed successfully."
+            });
+        }
+
 
     }
 }

@@ -41,16 +41,15 @@ const LoginDialog = ({ isLoginModalOpen, setIsLoginModalOpen }) => {
     const data = await response.json();
 
     if (data.isSuccess) {
-      toast.success(data.message);
-
-      if (data.roles && data.roles.includes("admin")) {
-        navigate("/admin");
-      }
-
-      setIsLoginModalOpen(false);
-
       localStorage.setItem("token", data.token);
       setToken(data.token);
+      toast.success(data.message);
+      if (data.roles && data.roles.includes("admin")) {
+        console.log("admin");
+
+        navigate("/admin");
+      }
+      setIsLoginModalOpen(false);
     } else {
       toast.error(data.message);
     }

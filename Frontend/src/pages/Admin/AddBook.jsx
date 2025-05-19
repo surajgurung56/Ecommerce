@@ -29,9 +29,17 @@ const AddBook = () => {
     register,
     handleSubmit,
     control,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  const discountPercentage = watch("discountPercentage");
+  const discountStartDate = watch("discountStartDate");
+  const discountEndDate = watch("discountEndDate");
+
+  const isAnyFieldFilled =
+    discountPercentage || discountStartDate || discountEndDate;
 
   const onSubmit = async (inputData) => {
     try {
@@ -60,6 +68,7 @@ const AddBook = () => {
         method: "POST",
         headers: {
           Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: formData,
       });
@@ -234,26 +243,61 @@ const AddBook = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6 relative border border-gray-200">
+            <div className="bg-white rounded-lg shadow-sm p-6 relative border border-gray-200 space-y-3">
               <CustomInput
                 label="Discount Percentage"
                 placeholder="Enter discount percentage"
                 type="number"
-                {...register("discountPercentage")}
+                {...register("discountPercentage", {
+                  min: {
+                    value: 1,
+                    message: "Minimum discount is 1%",
+                  },
+                  max: {
+                    value: 100,
+                    message: "Maximum discount is 100%",
+                  },
+                  validate: (value) => {
+                    if (isAnyFieldFilled && !value)
+                      return "Discount percentage is required";
+                    return true;
+                  },
+                })}
                 error={errors.discountPercentage?.message}
               />
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <CustomInput
                   label="Discount Start Date"
                   type="date"
-                  {...register("discountStartDate")}
-                  error={errors.discountEndDate?.message}
+                  {...register("discountStartDate", {
+                    validate: (value) => {
+                      if (isAnyFieldFilled && !value)
+                        return "Start date is required";
+                      return true;
+                    },
+                  })}
+                  error={errors.discountStartDate?.message}
                 />
 
                 <CustomInput
                   label="Discount End Date"
                   type="date"
-                  {...register("discountEndDate")}
+                  {...register("discountEndDate", {
+                    validate: (value) => {
+                      if (isAnyFieldFilled && !value)
+                        return "End date is required";
+
+                      const start = new Date(discountStartDate);
+                      const end = new Date(value);
+
+                      if (discountStartDate && value && end <= start) {
+                        return "End date must be greater than start date";
+                      }
+
+                      return true;
+                    },
+                  })}
                   error={errors.discountEndDate?.message}
                 />
               </div>

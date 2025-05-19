@@ -48,7 +48,7 @@ export function DataTable({ columns, data }) {
             placeholder="Search by claimCode..."
             value={table.getColumn("claimCode")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("Claim Code")?.setFilterValue(event.target.value)
+              table.getColumn("claimCode")?.setFilterValue(event.target.value)
             }
           />
         </div>

@@ -206,7 +206,9 @@ export default function BookDetails() {
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
-                  {isOnSale ? (
+                   {book.discountPercentage &&
+            new Date(book.discountStartDate) <= new Date() &&
+            new Date(book.discountEndDate) >= new Date()  ? (
                     <>
                       <span className="line-through text-gray-500 text-lg">
                         Rs. {book.price}

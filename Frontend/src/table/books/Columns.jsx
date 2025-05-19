@@ -108,6 +108,7 @@ export const columns = [
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           });
 
@@ -133,6 +134,7 @@ export const columns = [
               headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             }
           );

@@ -3,6 +3,7 @@ using Backend.Data;
 using Backend.Dtos.Auth;
 using Backend.Interfaces;
 using Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace Backend.Controllers
             _userManager = userManager;
         }
 
+
+        [Authorize]
         [HttpGet("/user")]
         public async Task<IActionResult> GetUser()
         {

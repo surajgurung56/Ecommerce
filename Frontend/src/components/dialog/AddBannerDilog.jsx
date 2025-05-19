@@ -20,9 +20,13 @@ const AddBannerDilog = ({ isDilogOpen, setIsDilogOpen }) => {
     register,
     handleSubmit,
     control,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
 
   const onSubmit = async (inputData) => {
     try {
@@ -31,7 +35,7 @@ const AddBannerDilog = ({ isDilogOpen, setIsDilogOpen }) => {
       formData.append("link", inputData.link);
       formData.append("startDate", inputData.startDate);
       formData.append("endDate", inputData.endDate);
-      formData.append("Message", inputData.Message);
+      formData.append("Message", inputData.inputMessage);
 
       if (inputData.image) {
         formData.append("image", inputData.image);
@@ -41,6 +45,7 @@ const AddBannerDilog = ({ isDilogOpen, setIsDilogOpen }) => {
         method: "POST",
         headers: {
           Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: formData,
       });
@@ -49,8 +54,8 @@ const AddBannerDilog = ({ isDilogOpen, setIsDilogOpen }) => {
 
       if (result.success) {
         toast.success(result.message);
-        setIsDilogOpen(false);
         queryClient.invalidateQueries({ queryKey: ["banners"] });
+        setIsDilogOpen(false);
       } else {
         toast.error(result.message);
       }
@@ -134,7 +139,17 @@ const AddBannerDilog = ({ isDilogOpen, setIsDilogOpen }) => {
                   type="date"
                   className=""
                   {...register("endDate", {
-                    required: "End date date is required",
+                    required: "End date is required",
+                    validate: (value) => {
+                      if (
+                        startDate &&
+                        value &&
+                        new Date(value) <= new Date(startDate)
+                      ) {
+                        return "End date must be after start date";
+                      }
+                      return true;
+                    },
                   })}
                   error={errors.endDate?.message}
                 />
@@ -143,8 +158,8 @@ const AddBannerDilog = ({ isDilogOpen, setIsDilogOpen }) => {
               <CustomTextArea
                 label="Message"
                 placeholder="Enter genre name"
-                {...register("name", { required: "Name is required" })}
-                error={errors.name?.message}
+                {...register("inputMessage", { required: "Name is required" })}
+                error={errors.inputMessage?.message}
               />
 
               <Button className="w-full">Add Banner Announcement</Button>

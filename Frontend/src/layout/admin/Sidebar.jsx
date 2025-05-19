@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { Tags, Book, ShoppingBag, Info, LogOut } from "lucide-react";
+import toast from "react-hot-toast";
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext";
 
 const Sidebar = () => {
+  const { setUser } = useContext(UserContext);
   return (
     <div
       className={`fixed top-0 left-0 z-40 h-screen bg-primary transition-transform duration-300 ease-in-out text-white p-4 w-64 `}
@@ -65,7 +69,14 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-        <button className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white">
+        <button
+          className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+          onClick={() => {
+            setUser(null);
+            localStorage.removeItem("token");
+            toast.success("Logout successful");
+          }}
+        >
           <LogOut size={20} />
           <span>Logout</span>
         </button>

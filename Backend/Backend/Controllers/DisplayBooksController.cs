@@ -16,8 +16,9 @@ namespace Backend.Controllers
             this.dbContext = dbContext;
         }
 
+     
         [HttpGet("/popular-books")]
-        public List<PopularBooksResponseDto> GetTopBooksForHomePage()
+        public IActionResult GetTopBooksForHomePage()
         {
             var topBooks = dbContext.OrderItems
                 .Where(oi => oi.BookId != null)
@@ -38,8 +39,13 @@ namespace Backend.Controllers
                       })
                 .ToList();
 
-            return topBooks;
+            return Ok(new
+            {
+                success = true,
+                data = topBooks
+            });
         }
+
 
         [HttpGet("/new-arrivals")]
         public IActionResult GetNewArrivals()

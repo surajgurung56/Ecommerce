@@ -83,7 +83,6 @@ const BookCard = ({ book, isWished }) => {
           </div>
 
           {book.discountPercentage &&
-            book.isOnSale &&
             new Date(book.discountStartDate) <= new Date() &&
             new Date(book.discountEndDate) >= new Date() && (
               <div className={`absolute top-0 left-0 `}>

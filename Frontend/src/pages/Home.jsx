@@ -8,13 +8,20 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { baseUrl } from "@/config";
+import Autoplay from "embla-carousel-autoplay";
 
 import useFetchBanners from "@/hooks/useFetchBanners";
+
 import useFetchBooks from "@/hooks/useFetchBooks";
+import { useNavigate } from "react-router-dom";
+import { usefetchBestSeller } from "@/hooks/usefetchBestSeller";
 
 const Home = () => {
   const { data: banners = [] } = useFetchBanners();
   const { data: books = [] } = useFetchBooks();
+  const { data: bestSellers = [] } = usefetchBestSeller();
+
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -22,7 +29,13 @@ const Home = () => {
         <div className="bg-gray-50 py-10 sm:px-6">
           {banners.length > 0 && (
             <div className="bg-gray-50 py-10 sm:px-6">
-              <Carousel>
+              <Carousel
+                plugins={[
+                  Autoplay({
+                    delay: 5000,
+                  }),
+                ]}
+              >
                 <CarouselContent>
                   {banners.map((banner, index) => (
                     <CarouselItem key={index}>
@@ -34,7 +47,9 @@ const Home = () => {
                           <p className="text-lg md:text-xl text-gray-700">
                             {banner.message || ""}
                           </p>
+
                           <Button
+                            onClick={() => navigate(banner?.link)}
                             variant="outline"
                             className="uppercase text-sm font-medium border border-gray-300 hover:bg-gray-100 hover:text-gray-900 transition duration-300"
                           >
@@ -77,8 +92,8 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
-          {books.slice(0, 4).map((book) => (
-            <BookCard key={book.id} book={book} />
+          {bestSellers.slice(0, 4).map((item) => (
+            <BookCard key={item.book.id} book={item.book} />
           ))}
         </div>
       </div>

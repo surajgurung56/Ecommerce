@@ -13,10 +13,13 @@ import CustomTextArea from "../ui/CustomTextArea";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import clsx from "clsx";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ReviewDialog = ({ isDialogOpen, setIsDialogOpen, bookId }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -33,7 +36,7 @@ const ReviewDialog = ({ isDialogOpen, setIsDialogOpen, bookId }) => {
 
     const payload = {
       ...inputData,
-      
+
       rating,
     };
 
@@ -52,6 +55,7 @@ const ReviewDialog = ({ isDialogOpen, setIsDialogOpen, bookId }) => {
 
       if (data.success) {
         toast.success(data.message);
+        queryClient.invalidateQueries({ queryKey: ["genres"] });
         setIsDialogOpen(false);
         reset();
         setRating(0);

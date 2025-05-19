@@ -3,53 +3,36 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Star } from "lucide-react";
 import ReviewDialog from "@/components/dialog/ReviewDialog";
+import useFetchOrderItems from "@/hooks/useFetchOrderItems";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
-  const [orderItems, setOrderItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: order, isLoading, isError } = useFetchOrderItems(orderId);
+
   const [isOpenReviewDialog, setIsOpenReviewDialog] = useState(false);
-  const [order, setOrder] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState(null);
 
-  const getOrderDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${baseUrl}/order/order-items/${orderId}`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+  const orderItems = order?.orderItems || [];
 
-      const result = await response.json();
-      if (result.success) {
-        setOrderItems(result.data.orderItems);
-        setOrder(result.data);
-      } else {
-        setError("Failed to load order details");
-      }
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-      setError("An error occurred while fetching order details");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (orderId) getOrderDetails();
-  }, [orderId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
           <div className="h-12 w-48 bg-gray-200 rounded mb-4"></div>
           <div className="h-64 w-full max-w-2xl bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="text-center p-6 bg-red-50 rounded-lg border border-red-100">
+          <h2 className="text-xl font-semibold text-red-700 mb-2">
+            Failed to load order details.
+          </h2>
+          <p className="text-red-600">Please try again later.</p>
         </div>
       </div>
     );
@@ -90,8 +73,10 @@ const OrderDetails = () => {
             >
               <div className="p-4 md:p-6 flex flex-col md:flex-row gap-6">
                 <div className="flex-shrink-0">
-                  <div className="relative w-full md:w-32 h-40 bg-gray-100 rounded-md overflow-hidden">
+                  <div className="relative w-full md:w-32 h-40 bg-gray-100 rounded-md overflow-hidden cursor-pointer">
                     <img
+
+                   
                       src={`${baseUrl}${item?.imageURL || ""}`}
                       alt={item.bookTitle}
                       className="w-full h-full object-cover"
@@ -99,13 +84,13 @@ const OrderDetails = () => {
                   </div>
                 </div>
 
-                <div className="flex-grow">
+                <div className="flex-grow flex flex-col">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
                     {item.bookTitle}
                   </h3>
                   <p className="text-gray-600 mb-4">by {item.bookAuthor}</p>
 
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-1 mb-auto">
                     <span className="text-sm text-gray-700">
                       <span className="font-medium">ISBN:</span> {item.isbn}
                     </span>
@@ -143,6 +128,10 @@ const OrderDetails = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-8 text-right font-semibold text-lg">
+          Order Total: Rs. {orderTotal.toFixed(2)}
         </div>
       </div>
     </>

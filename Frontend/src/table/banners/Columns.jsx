@@ -9,6 +9,8 @@ import { PiCaretUpDownFill } from "react-icons/pi";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "@/config";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export const columns = [
   {
@@ -45,10 +47,35 @@ export const columns = [
     header: "Action",
     id: "actions",
     cell: ({ row }) => {
-      const book = row.original;
+      const banner = row.original;
+
+      const queryClient = useQueryClient();
 
       const [dropdownOpen, setDropdownOpen] = useState();
-      const navigate = useNavigate();
+
+      const deleteBanner = async () => {
+        try {
+          const response = await fetch(`${baseUrl}/banner/${banner.id}`, {
+            method: "DELETE",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            toast.success(result.message);
+            queryClient.invalidateQueries({ queryKey: ["banners"] });
+          } else {
+            toast.error(result.message);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
       return (
         <>
@@ -64,33 +91,7 @@ export const columns = [
                 <button
                   onClick={() => {
                     setDropdownOpen(false);
-                    setIsCityDetailOpen(true);
-                  }}
-                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-                >
-                  <Eye className="h-4 w-4 mr-2 text-gray-500" />
-                  View details
-                </button>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="p-0">
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    navigate(`/admin/book/update/${book.id}`);
-                  }}
-                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-                >
-                  <Edit className="h-4 w-4 mr-2 text-gray-500" />
-                  Edit
-                </button>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="p-0">
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    setIsDeleteModalOpen(true);
+                    deleteBanner();
                   }}
                   className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors group"
                 >

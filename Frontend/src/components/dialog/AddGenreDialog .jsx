@@ -29,6 +29,7 @@ const AddGenreDialog = ({ isAddGenreDialogOpen, setIsAddGenreDialogOpen }) => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -36,7 +37,7 @@ const AddGenreDialog = ({ isAddGenreDialogOpen, setIsAddGenreDialogOpen }) => {
 
       if (data.success) {
         toast.success(data.message);
-        queryClient.invalidateQueries({ queryKey: ["genres"] });
+        queryClient.invalidateQueries({ queryKey: ["orderItems"] });
         setIsAddGenreDialogOpen(false);
       } else {
         toast.error(data.message);

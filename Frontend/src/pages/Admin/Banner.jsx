@@ -6,8 +6,6 @@ import React from "react";
 const Banner = () => {
   const { data = [] } = useFetchBanners();
 
-  console.log(data);
-
   return <DataTable columns={columns} data={data} />;
 };
 

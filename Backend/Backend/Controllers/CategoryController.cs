@@ -2,6 +2,7 @@
 using Backend.Dtos;
 using Backend.Interfaces;
 using Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,17 +19,27 @@ namespace Backend.Controllers
             _categoryService = categoryService;
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpPost("/category")]
         public ActionResult<Category> AddCategory(CategoryDto categoryDto) 
         {
+
+            try { 
             var addedCategory = _categoryService.AddCategory(categoryDto);
 
             return Ok(new
             {
                 success = true,
-                message = "Gerna added successfully",
+                message = "Genre added successfully",
                 data = addedCategory
             });
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpGet("/categories")]
@@ -45,7 +56,7 @@ namespace Backend.Controllers
 
             if (category == null)
             {
-                return NotFound(new { success = false, message = "Category not found." });
+                return NotFound(new { success = false, message = "Genre not found." });
             }
 
             return Ok(new
@@ -56,7 +67,7 @@ namespace Backend.Controllers
         }
 
 
-
+        [Authorize(Roles = "admin")]
         [HttpPut("/category/{id}")]
         public async Task<IActionResult> UpdateCategory(long id, [FromBody] CategoryDto categoryDto)
         {
@@ -64,11 +75,13 @@ namespace Backend.Controllers
 
             if (updatedCategory == null)
             {
-                return NotFound(new {Success= false, Message = $"Category with ID {id} not found."});
+                return NotFound(new {Success= false, Message = $"Genre with ID {id} not found."});
             }
-            return Ok(new { Success = true, data = updatedCategory }); 
+            return Ok(new { Success = true, message = "Genre updated successfully." }); 
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpDelete("/category/{id}")]
         public async Task<IActionResult> DeleteCategory(long id)
         {
@@ -81,14 +94,14 @@ namespace Backend.Controllers
                     return NotFound(new
                     {
                         success = false,
-                        message = "Category not found."
+                        message = "Genre not found."
                     });
                 }
 
                 return Ok(new
                 {
                     success = true,
-                    message = "Category deleted successfully."
+                    message = "Genre deleted successfully."
                 });
             }
             catch (InvalidOperationException ex)

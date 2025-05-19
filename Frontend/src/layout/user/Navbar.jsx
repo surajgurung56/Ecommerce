@@ -106,6 +106,18 @@ const Navbar = () => {
                   </HoverCardContent>
                 </HoverCard> */}
               </NavLink>
+
+              {user && user.roles?.includes("admin") && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    `text-lg font-medium transition-colors hover:underline underline-offset-4 
+        ${isActive ? "text-primary underline underline-offset-4 " : ""}`
+                  }
+                >
+                  Admin Dashboard
+                </NavLink>
+              )}
             </nav>
           </div>
 

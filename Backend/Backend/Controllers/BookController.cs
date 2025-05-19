@@ -22,6 +22,8 @@ namespace Backend.Controllers
             dbContext = context;
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpPost("/book")]
         public async Task<ActionResult> CreateBook([FromForm] BookDto bookDto)
         {
@@ -89,6 +91,8 @@ namespace Backend.Controllers
             return Ok(new { success = true, data = await this._bookService.GetAllBooks()});
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpPut("/book/{id}")]
         public async Task<IActionResult> UpdateBook(long id, [FromForm] UpdateBookDto bookDto)
         {
@@ -97,14 +101,6 @@ namespace Backend.Controllers
             {
                 return NotFound(new { success = false, message = "Book not found" });
             }
-
-
-            // Print the values
-            Console.WriteLine("printing");
-            Console.WriteLine($"Discount Percentage: {book.DiscountPercentage?.ToString() ?? "null"}");
-            Console.WriteLine($"Discount Start Date: {book.DiscountStartDate?.ToString() ?? "null"}");
-            Console.WriteLine($"Discount End Date: {book.DiscountEndDate?.ToString() ?? "null"}");
-            Console.WriteLine("printed");
 
             book.Title = bookDto.Title;
             book.Author = bookDto.Author;
@@ -118,9 +114,9 @@ namespace Backend.Controllers
             book.Format = bookDto.Format;
             book.CategoryId = bookDto.CategoryId;
 
-            book.DiscountPercentage = bookDto.DiscountPercentage.HasValue ? bookDto.DiscountPercentage.Value : (int?)null;
-            book.DiscountStartDate = bookDto.DiscountStartDate.HasValue ? bookDto.DiscountStartDate.Value : (DateOnly?)null;
-            book.DiscountEndDate = bookDto.DiscountEndDate.HasValue ? bookDto.DiscountEndDate.Value : (DateOnly?)null;
+            book.DiscountPercentage = bookDto.DiscountPercentage;
+            book.DiscountStartDate = bookDto.DiscountStartDate;
+            book.DiscountEndDate = bookDto.DiscountEndDate;
 
 
             if (bookDto.Image != null)
@@ -200,11 +196,20 @@ namespace Backend.Controllers
             var sortBy = bookSortDto.SortBy?.ToLowerInvariant() ?? "title";
 
             var query = dbContext.Books.AsQueryable();
-
+           
 
             if (sortBy == "price")
             {
-                query = query.OrderBy(b => b.Price);
+
+                var today = DateOnly.FromDateTime(DateTime.Today);
+
+                query = query.OrderBy(b =>
+             (b.DiscountPercentage > 0 &&
+              b.DiscountStartDate <= today &&
+              b.DiscountEndDate >= today)
+                 ? b.Price * (1 - b.DiscountPercentage / 100.0)
+                 : b.Price
+         );
             }
             else if (sortBy == "publishdate")
             {
@@ -223,6 +228,8 @@ namespace Backend.Controllers
             });
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpPatch("/books/{id}/toggle-sale")]
         public async Task<IActionResult> ToggleSale(long id)
         {
@@ -244,6 +251,9 @@ namespace Backend.Controllers
             });
         }
 
+
+
+        [Authorize(Roles = "admin")]
         [HttpDelete("/book/{id}")]
         public async Task<IActionResult> Delete(long id)
         {

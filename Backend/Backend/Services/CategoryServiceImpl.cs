@@ -18,6 +18,14 @@ namespace Backend.Services
 
         public Category AddCategory(CategoryDto categoryDto)
         {
+            bool exists = dbContext.Categories
+            .Any(c => c.Name.ToLower() == categoryDto.Name.ToLower());
+
+            if (exists)
+            {
+                throw new InvalidOperationException("Genre already exists.");
+            }
+
             var newCategory = dbContext.Categories.Add(new Category()
             {
                 Name = categoryDto.Name,
@@ -48,7 +56,7 @@ namespace Backend.Services
         {
             if (categoryDto == null || string.IsNullOrWhiteSpace(categoryDto.Name))
             {
-                throw new ArgumentException("Invalid category data.");
+                throw new ArgumentException("Invalid genre data.");
             }
 
             var existingCategory = await dbContext.Categories.FindAsync(id);
@@ -75,7 +83,7 @@ namespace Backend.Services
             // Check if the category has any associated books
             if (category.Books.Any())
             {
-                throw new InvalidOperationException("Cannot delete the category because it is associated with one or more books.");
+                throw new InvalidOperationException("Cannot delete the genre because it is associated with one or more books.");
             }
 
             // Remove the category
