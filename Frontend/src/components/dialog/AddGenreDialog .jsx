@@ -37,7 +37,7 @@ const AddGenreDialog = ({ isAddGenreDialogOpen, setIsAddGenreDialogOpen }) => {
 
       if (data.success) {
         toast.success(data.message);
-        queryClient.invalidateQueries({ queryKey: ["orderItems"] });
+        queryClient.invalidateQueries({ queryKey: ["genres"] });
         setIsAddGenreDialogOpen(false);
       } else {
         toast.error(data.message);

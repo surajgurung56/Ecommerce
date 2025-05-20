@@ -82,13 +82,11 @@ const BookCard = ({ book, isWished }) => {
             {isWished ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
           </div>
 
-          {book.discountPercentage &&
-            new Date(book.discountStartDate) <= new Date() &&
-            new Date(book.discountEndDate) >= new Date() && (
-              <div className={`absolute top-0 left-0 `}>
-                <img src="/sale.png" alt="Sale" className="w-[40%]" />
-              </div>
-            )}
+          {book.isOnSale && (
+            <div className={`absolute top-0 left-0 `}>
+              <img src="/sale.png" alt="Sale" className="w-[40%]" />
+            </div>
+          )}
         </div>
 
         <h3 className="font-medium text-sm text-gray-900 line-clamp-1">

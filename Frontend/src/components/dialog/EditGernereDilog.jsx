@@ -77,8 +77,10 @@ const EditGernereDilog = ({
   };
 
   useEffect(() => {
-    getgenre();
-  }, []);
+    if (isAddGenreDialogOpen) {
+      getgenre();
+    }
+  }, [isAddGenreDialogOpen]);
 
   return (
     <Dialog open={isAddGenreDialogOpen} onOpenChange={setIsAddGenreDialogOpen}>
